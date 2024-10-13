@@ -1,7 +1,7 @@
 const upstashRedisRestUrl = process.env.UPSTASH_REDIS_REST_URL;
 const upstashRedisRestToken = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-type Commands = 'zrange' | 'sismember' | 'get' | 'smember'
+type Commands = 'zrange' | 'sismember' | 'get' | 'smembers'
 
 export async function fetchRedis(
     Command:Commands,
