@@ -1,4 +1,5 @@
 import { Icons,  IconType } from '@/components/icons'
+import SignOutButton from '@/components/SignOutButton'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
@@ -86,10 +87,9 @@ const Layout = async ({children}:LayoutProps) => {
                 <div className='flex flex-col'>
                   <span className=''>{session.user.name}</span>
                   <span className='text-xs text-zinc-400'>{session.user.email}</span>
-
                 </div>
             </div>
-
+            <SignOutButton className='h-full aspect-square p-2'/>
           </li>
         </ul>
       </nav>
@@ -98,5 +98,6 @@ const Layout = async ({children}:LayoutProps) => {
      {children}
     </div>
 }
+//2.48
 
 export default Layout
