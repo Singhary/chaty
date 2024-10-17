@@ -1,6 +1,8 @@
 import FriendRequestsidebarOptions from '@/components/FriendRequestsidebarOptions'
 import { Icons,  IconType } from '@/components/icons'
+import SidebarChatList from '@/components/sidebarChatList'
 import SignOutButton from '@/components/SignOutButton'
+import { getFriendsByUserId } from '@/helpers/get-friend-user-id'
 import { fetchRedis } from '@/helpers/redis'
 import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth'
@@ -28,7 +30,7 @@ const sidebaroptions : sidebarOptions[] = [
   } ,
   {
     id: '2',
-    name:'2Friends',
+    name:'Friends2',
     href:'/dashboard/add',
     icon:'UserPlus',
   } ,
@@ -43,7 +45,9 @@ const Layout = async ({children}:LayoutProps) => {
         return <div>Unauthorized</div>
     }
 
-     const unseenRequestCount = (await fetchRedis('smembers' , `user:${session.user.id}:incoming_friend_requests`)as User[]).length;
+    const friends = await getFriendsByUserId(session.user.id);
+
+    const unseenRequestCount = (await fetchRedis('smembers' , `user:${session.user.id}:incoming_friend_requests`)as User[]).length;
 
   return <div className='w-full flex h-screen'>
      <div className='flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
@@ -51,13 +55,14 @@ const Layout = async ({children}:LayoutProps) => {
         <Icons.Logo className='h-8 w-auto text-indigo-600'/>
       </Link>
      
-      <div className='text-xs font-semibold leading-6 text-gray-400'>
-      Your chat's 
-      </div>
+    {friends.length>0?(<div className='text-xs font-semibold leading-6 text-gray-400'>
+    Your chat's 
+    </div>):null}
+
       <nav className='flex flex-1 flex-col'>
         <ul role='list' className='flex flex-1 flex-col gap-y-7'>
           <li>
-            //chats that user have
+            <SidebarChatList friends={friends}/>
           </li>
           <li>
             <div className='text-xs font-semibold leading-6 text-gray-400'>Overview</div>
@@ -75,14 +80,13 @@ const Layout = async ({children}:LayoutProps) => {
                   </li>
                 )
               })}
+              <li>
+                <FriendRequestsidebarOptions sessionId={session.user.id} initialUnssenRequestCount={unseenRequestCount}/>
+              </li>
+              
             </ul>
           </li>
           
-          <li>
-            <FriendRequestsidebarOptions sessionId={session.user.id} initialUnssenRequestCount={unseenRequestCount}/>
-          </li>
-
-
           <li className='-mx-6 mt-auto flex items-center'>
             <div className='flex flex-1 items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900'>
               <div className='relative h-8 w-8 bg-gray-50'>
@@ -108,6 +112,5 @@ const Layout = async ({children}:LayoutProps) => {
      {children}
     </div>
 }
-//2.48
 
 export default Layout
