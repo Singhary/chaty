@@ -1,3 +1,4 @@
+import ChatInput from '@/components/ChatInput';
 import Messages from '@/components/Messages';
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
@@ -48,7 +49,6 @@ const page = async({params}:PageProps) => {
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1 ;
   const chatPartner = await fetchRedis('get', `user:${chatPartnerId}`).then((image)=>JSON.parse(image)) as User;
-  console.log(chatPartner)
   const initalMessages = await getChatMessages(chatId);
 
   return <div className='flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]'>
@@ -75,6 +75,7 @@ const page = async({params}:PageProps) => {
       </div>
     </div>
     <Messages initialMessages={initalMessages} sessionId={session.user.id}/>
+    <ChatInput chatPartner={chatPartner} chatId={chatId}/>
   </div>
 }
 
