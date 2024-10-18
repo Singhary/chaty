@@ -1,7 +1,9 @@
+import Messages from '@/components/Messages';
 import { fetchRedis } from '@/helpers/redis';
 import { authOptions } from '@/lib/auth';
 import { messageArrayValidator } from '@/lib/Validations/message';
 import { getServerSession } from 'next-auth';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { FC } from 'react'
 
@@ -26,7 +28,6 @@ async function getChatMessages(chatId:string){
     notFound();
   }
 }
-// 4.27
 
 const page = async({params}:PageProps) => {
    
@@ -46,21 +47,35 @@ const page = async({params}:PageProps) => {
   }
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1 ;
-  const chatPartner = await fetchRedis('get', `user:${chatPartnerId}`) as User | null;
+  const chatPartner = await fetchRedis('get', `user:${chatPartnerId}`).then((image)=>JSON.parse(image)) as User;
+  console.log(chatPartner)
   const initalMessages = await getChatMessages(chatId);
 
+  return <div className='flex-1 justify-between flex flex-col h-full max-h-[calc(100vh-6rem)]'>
+     <div className='flex sm:items-center justify-between py-3 border-b-2 border-gray-200'>
+        <div className='relative flex items-center space-x-4'>
+          <div className='relative'>
+            <div className='relative w-8 sm:w-12 h-8 sm:h-12'>
+              <Image 
+                fill
+                referrerPolicy='no-referrer'
+                src={chatPartner.image}
+                className='rounded-full'
+                alt='profile image'
+                />
+            </div>
+          </div>  
 
-
-
-
-
-
-
-
-
-
-
-  return <div>{params.chatId}</div>
+          <div className='flex flex-col leading-tight'>
+            <div className='text-xl flex items-center'>
+              <span className='text-gray-700 mr-3 font-semibold'>{chatPartner.name}</span>
+            </div>
+             <span className='text-gray-600 text-sm'>{chatPartner.email}</span>
+          </div>
+      </div>
+    </div>
+    <Messages initialMessages={initalMessages} sessionId={session.user.id}/>
+  </div>
 }
 
 export default page

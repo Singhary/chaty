@@ -1,6 +1,6 @@
 import FriendRequestsidebarOptions from '@/components/FriendRequestsidebarOptions'
 import { Icons,  IconType } from '@/components/icons'
-import SidebarChatList from '@/components/sidebarChatList'
+import SidebarChatList from '@/components/SidebarChatList'
 import SignOutButton from '@/components/SignOutButton'
 import { getFriendsByUserId } from '@/helpers/get-friend-user-id'
 import { fetchRedis } from '@/helpers/redis'
@@ -46,7 +46,7 @@ const Layout = async ({children}:LayoutProps) => {
     }
 
     const friends = await getFriendsByUserId(session.user.id);
-
+        
     const unseenRequestCount = (await fetchRedis('smembers' , `user:${session.user.id}:incoming_friend_requests`)as User[]).length;
 
   return <div className='w-full flex h-screen'>
@@ -62,7 +62,7 @@ const Layout = async ({children}:LayoutProps) => {
       <nav className='flex flex-1 flex-col'>
         <ul role='list' className='flex flex-1 flex-col gap-y-7'>
           <li>
-            <SidebarChatList friends={friends}/>
+            <SidebarChatList sessionId = {session.user.id} friends={friends}/>
           </li>
           <li>
             <div className='text-xs font-semibold leading-6 text-gray-400'>Overview</div>
