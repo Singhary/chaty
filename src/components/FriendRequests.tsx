@@ -1,9 +1,11 @@
 "use client"
+import { pusherClient } from '@/lib/pusher';
+import { toPusherKey } from '@/lib/utils';
 import axios from 'axios';
 import { Check, User, UserPlus, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Router } from 'next/router';
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 interface FriendRequestsProps {
   incomingFriendRequests: IncomingFriendRequest[];
@@ -12,8 +14,27 @@ interface FriendRequestsProps {
 
 const FriendRequests: FC<FriendRequestsProps> = ({incomingFriendRequests,sessionId}) => {
    const router = useRouter() ;
+   console.log(incomingFriendRequests)
     const [friendRequest , setFriendRequest] = useState<IncomingFriendRequest[]>(incomingFriendRequests);
     
+    useEffect(()=>{
+       pusherClient.subscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
+
+       const friendRequestHandler = ({senderId , senderEmail}:IncomingFriendRequest)=>{
+          setFriendRequest((prev)=>[...prev,{
+            senderId,
+            senderEmail,
+          }])
+       }
+        
+       pusherClient.bind('incoming_friend_requests', friendRequestHandler);
+
+       return ()=>{
+          pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incoming_friend_request`));
+          pusherClient.unbind('incoming_friend_request', friendRequestHandler);
+       }
+    },[])
+
     const acceptFriend = async (senderId: string) => {
       await axios.post('/api/friends/accept', { id: senderId })
   
@@ -26,16 +47,17 @@ const FriendRequests: FC<FriendRequestsProps> = ({incomingFriendRequests,session
   
     const denyFriend = async (senderId: string) => {
       await axios.post('/api/friends/deny', { id: senderId })
-  
+
       setFriendRequest((prev) =>
         prev.filter((request) => request.senderId !== senderId)
       )
-  
       router.refresh()
     }
   
 
   return <>
+  {console.log("incomingFriendRequests" , incomingFriendRequests)}
+  {console.log("friendRequest" , friendRequest)}
    {friendRequest.length===0?(
         <div className='text-gray-400 text-center text-sm'>
         No friend request

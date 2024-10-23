@@ -17,10 +17,11 @@ const  page: FC = async({}) => {
     
     //to get the email of the people who sent friend request
     const incomingFriendRequest = await Promise.all(incomingSenderIds.map(async(senderId)=>{
-        const sender = await fetchRedis('get',`user:${senderId}` ).then((data)=>JSON.parse(data)) as User ;
+        const sender = (await fetchRedis('get', `user:${senderId}`)) as string
+        const senderParsed = JSON.parse(sender) as User
         return {
             senderId,
-            senderEmail:sender.email,
+            senderEmail:senderParsed.email,
             }
         })
     )
