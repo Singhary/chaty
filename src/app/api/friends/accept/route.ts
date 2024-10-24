@@ -1,6 +1,7 @@
 import { fetchRedis } from "@/helpers/redis";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 
@@ -29,6 +30,8 @@ export  async function POST(req:Request , res:Response){
     if(!hasFriendRequest){
         return new Response('User has not sent you a friend request',{status:400});
     }
+
+    pusherServer.trigger(`user:${idToAdd}:friends`,'new_friend','')
 
     //Now we can add the user as friend
 

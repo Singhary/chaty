@@ -1,6 +1,6 @@
 'use client'
 
-import { Icon, Loader2, LogOut } from 'lucide-react'
+import { Loader2} from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import { ButtonHTMLAttributes, FC, useState } from 'react'
 import { toast } from 'react-hot-toast'

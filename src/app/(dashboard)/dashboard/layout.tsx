@@ -1,10 +1,12 @@
 import FriendRequestsidebarOptions from '@/components/FriendRequestsidebarOptions'
 import { Icons,  IconType } from '@/components/icons'
+import MobileChatLayout from '@/components/MobileChatLayout'
 import SidebarChatList from '@/components/SidebarChatList'
 import SignOutButton from '@/components/SignOutButton'
 import { getFriendsByUserId } from '@/helpers/get-friend-user-id'
 import { fetchRedis } from '@/helpers/redis'
 import { authOptions } from '@/lib/auth'
+import { SidebarOption } from '@/types/typings'
 import { getServerSession } from 'next-auth'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,25 +16,18 @@ interface LayoutProps {
  children: ReactNode
 }
 
-interface sidebarOptions {
-  id: string;
-  name: string;
-  href: string;
-  icon: IconType;
-}
-
-const sidebaroptions : sidebarOptions[] = [
+const sidebaroptions : SidebarOption[] = [
   {
-    id: '1',
+    id: 1,
     name:'Friends',
     href:'/dashboard/add',
-    icon:'UserPlus',
+    Icon:'UserPlus',
   } ,
   {
-    id: '2',
+    id: 2,
     name:'Friends2',
     href:'/dashboard/add',
-    icon:'UserPlus',
+    Icon:'UserPlus',
   } ,
 ]
 
@@ -50,7 +45,11 @@ const Layout = async ({children}:LayoutProps) => {
     const unseenRequestCount = (await fetchRedis('smembers' , `user:${session.user.id}:incoming_friend_requests`)as User[]).length;
 
   return <div className='w-full flex h-screen'>
-     <div className='flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
+    <div className='md:hidden'>
+      <MobileChatLayout friends={friends} session={session} sidebarOptions={sidebaroptions} unseenRequestCount={unseenRequestCount}/>
+    </div>
+
+     <div className='hidden md:flex h-full w-full max-w-xs grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6'>
       <Link href={'/dashboard'} className='flex h-16 shrink-0 items-center'>
         <Icons.Logo className='h-8 w-auto text-indigo-600'/>
       </Link>
@@ -68,7 +67,7 @@ const Layout = async ({children}:LayoutProps) => {
             <div className='text-xs font-semibold leading-6 text-gray-400'>Overview</div>
             <ul role='list' className='-mx-2 mt-2 space-y-1'>
               {sidebaroptions.map((options)=>{
-                const Icon = Icons[options.icon];
+                const Icon = Icons[options.Icon];
                 return (
                   <li key={options.id}>
                     <Link href={options.href} className='text-gray-700 hover:text-indigo-700 hover:bg-gray-100 group flex gap-3 rounded-md p-2 text-sm leading-6 font-semibold'>
