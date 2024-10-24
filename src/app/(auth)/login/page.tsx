@@ -25,7 +25,43 @@ const Page:FC = () => {
        <div className='flex min-h-full justify-center items-center py-12 px-4 sm:px-6 lg:px-8'>
          <div className='w-full flex flex-col items-center max-w-md space-y-8'>
             <div className='flex flex-col items-center gap-8'>
-                 logo
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 100 100"
+    className="w-24 h-24"
+  >
+    <rect
+      x="15"
+      y="20"
+      rx="20"
+      ry="20"
+      width="70"
+      height="50"
+      className="fill-blue-500"
+    />
+    <polygon
+      points="40,70 30,55 45,55"
+      className="fill-blue-500"
+    />
+
+    <polygon
+      points="50,30 55,45 45,45 50,60 60,40 50,40"
+      className="fill-yellow-500"
+    />
+
+    <text
+      x="20"
+      y="95"
+      font-family="Arial, sans-serif"
+      font-size="20"
+      className="fill-gray-900 font-bold"
+    >
+      chat
+      <tspan className="font-bold italic fill-yellow-500">E</tspan>
+    </text>
+  </svg>
+
+
             <h2 className='mt-6 font-bold text-3xl text-center tracking-tighter text-gray-900'>Sign in to your account</h2>
          </div>
          
