@@ -56,7 +56,7 @@ const Layout = async ({children}:LayoutProps) => {
       </Link>
      
     {friends.length>0?(<div className='text-xs font-semibold leading-6 text-gray-400'>
-    Your chat's 
+    Your chats
     </div>):null}
 
       <nav className='flex flex-1 flex-col'>
