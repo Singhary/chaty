@@ -19,13 +19,7 @@ interface LayoutProps {
 const sidebaroptions : SidebarOption[] = [
   {
     id: 1,
-    name:'Friends',
-    href:'/dashboard/add',
-    Icon:'UserPlus',
-  } ,
-  {
-    id: 2,
-    name:'Friends2',
+    name:'Add Friends',
     href:'/dashboard/add',
     Icon:'UserPlus',
   } ,

@@ -21,6 +21,7 @@ const FriendRequests: FC<FriendRequestsProps> = ({incomingFriendRequests,session
        pusherClient.subscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
 
        const friendRequestHandler = ({senderId , senderEmail}:IncomingFriendRequest)=>{
+          console.log("Function is called")
           setFriendRequest((prev)=>[...prev,{
             senderId,
             senderEmail,
@@ -30,8 +31,8 @@ const FriendRequests: FC<FriendRequestsProps> = ({incomingFriendRequests,session
        pusherClient.bind('incoming_friend_requests', friendRequestHandler);
 
        return ()=>{
-          pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incoming_friend_request`));
-          pusherClient.unbind('incoming_friend_request', friendRequestHandler);
+          pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
+          pusherClient.unbind('incoming_friend_requests', friendRequestHandler);
        }
     },[sessionId])
 
