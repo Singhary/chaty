@@ -22,6 +22,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"),require('tailwind-scrollbar')],
+  plugins: [require("@tailwindcss/forms"),require('tailwind-scrollbar') , require("tailwindcss-motion")],
 };
 export default config;

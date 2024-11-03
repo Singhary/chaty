@@ -32,6 +32,7 @@
     "react-loading-skeleton": "^3.5.0",
     "react-textarea-autosize": "^8.5.4",
     "tailwind-merge": "^2.5.2",
+    "tailwindcss-motion": "^0.3.0-beta",
     "zod": "^3.23.8"
   },
   "devDependencies": {
