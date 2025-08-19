@@ -8,9 +8,10 @@ import toast from 'react-hot-toast';
 interface ChatInputProps {
     chatPartner: User;
     chatId:string;
+    isGroupChat?: boolean;
 }
 
-const ChatInput: FC<ChatInputProps> = ({chatPartner , chatId}) => {
+const ChatInput: FC<ChatInputProps> = ({chatPartner , chatId, isGroupChat = false}) => {
     
     const textareaRef = useRef<HTMLTextAreaElement|null>(null);
     const [input, setInput] = useState<string>('');
@@ -23,10 +24,12 @@ const ChatInput: FC<ChatInputProps> = ({chatPartner , chatId}) => {
         setIsLoading(true);
 
         try {
-            await axios.post('/api/message/send',{
-                text:input,
-                chatId
-            })
+            const endpoint = isGroupChat ? '/api/groups/message' : '/api/message/send';
+            const payload = isGroupChat 
+                ? { groupId: chatId, text: input }
+                : { text: input, chatId };
+
+            await axios.post(endpoint, payload);
             setInput('');
             textareaRef.current?.focus();
         } catch (error) {
